@@ -1,0 +1,10 @@
+{% extends 'index.html' %}
+
+{% block content %}
+    <h2>Категория: {{ category_name }}</h2>
+    <ul>
+        {% for product in products %}
+            <li><a href="/product/{{ product.name }}">{{ product.name }}</a> - {{ product.price }} руб.</li>
+        {% endfor %}
+    </ul>
+{% endblock %}
