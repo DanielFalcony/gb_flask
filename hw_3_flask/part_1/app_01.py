@@ -1,8 +1,9 @@
 from flask import Flask, render_template, session, redirect, url_for, request, make_response
-from hw_3_flask.part_1.models import db, User
+from models import db, User
 from flask_wtf import FlaskForm, CSRFProtect
 from secrets import token_hex
 from forms import RegistrationForm
+import bcrypt
 
 
 app = Flask(__name__)
@@ -34,10 +35,11 @@ def register():
         user_email = form.user_email.data
         user_password = form.user_password.data
         confirm_password = form.confirm_password.data
+        password_hash = bcrypt.hashpw(user_password.encode('utf-8'), bcrypt.gensalt())
         new_user = User(user_first_name=user_name,
                         user_last_name=user_last_name,
                         user_email=user_email,
-                        user_password=user_password)
+                        user_password=password_hash)
         db.session.add(new_user)
         db.session.commit()
         user_id = new_user.id
