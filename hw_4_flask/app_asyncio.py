@@ -23,24 +23,23 @@ async def get_img(url: str):
     view.total_img(start_img, end_img)
 
 
-def main(img_urls):
+async def main(img_urls):
     start = perf_counter()
     for img_url in img_urls:
         task = asyncio.ensure_future(get_img(img_url))
         tasks.append(task)
-
-    loop = asyncio.get_event_loop()
-    loop.run_until_complete(asyncio.wait(tasks))
+    await asyncio.gather(*tasks)
 
     end = perf_counter()
     view.total(start, end)
 
 
 if __name__ == '__main__':
+    loop = asyncio.get_event_loop()
     if len(sys.argv) > 1:
         urls = sys.argv[1:]
         view.commandline_execute()
-        main(urls)
+        loop.run_until_complete(main(urls))
     else:
         view.usual_execute()
-        main(data)
+        loop.run_until_complete(main(data))
